@@ -19,8 +19,8 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from src.core.models.base import Base
-from src.core.models import *  # noqa
+from src.core.db.models.base import Base
+from src.core.db.models import *  # noqa
 from src.core.config import settings
 
 target_metadata = Base.metadata
