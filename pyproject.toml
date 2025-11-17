@@ -7,6 +7,10 @@ requires-python = ">=3.13"
 dependencies = [
     "aioredis>=2.0.1",
     "alembic>=1.17.2",
+    "asyncpg>=0.30.0",
+    "dotenv>=0.9.9",
     "fastapi>=0.121.2",
     "sqlalchemy>=2.0.44",
+    "sqlalchemy-utc>=0.14.0",
+    "uvicorn>=0.38.0",
 ]
