@@ -46,6 +46,17 @@ services:
     # ports:
     #   - "8000:8000"
 
+#  celery_worker:
+#    build:
+#      context: ./clear_inventory_cache_task
+#    command: uv run celery -A core.celery worker --concurrency 1 --loglevel=INFO
+#    depends_on:
+#      - redis
+#    env_file:
+#      - .env
+#    networks:
+#      - backend-network
+
 volumes:
   postgres-data:
   redis-data:
