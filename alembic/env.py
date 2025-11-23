@@ -1,7 +1,7 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, Connection
+from sqlalchemy import Connection
 from sqlalchemy import pool
 
 from alembic import context
@@ -11,9 +11,8 @@ import os
 
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-alembic_path = os.path.abspath(os.path.dirname(__file__))
-project_root = os.path.join(alembic_path, '..')
-src_path = os.path.join(project_root, 'src')
+src_path = os.path.join(os.path.dirname(__file__), "..", "src")
+src_path = os.path.abspath(src_path)
 sys.path.insert(0, src_path)
 
 # this is the Alembic Config object, which provides
@@ -30,9 +29,9 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from src.core.db.models.base import Base
-from src.core.db.models import *  # noqa
-from src.core.config import settings
+from core.db.models.base import Base
+from core.db.models import *  # noqa
+from core.config import settings
 
 target_metadata = Base.metadata
 
