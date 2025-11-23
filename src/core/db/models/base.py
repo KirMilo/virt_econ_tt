@@ -8,7 +8,7 @@ class Base(DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        if cls.__tablename__[-1] == "y":
-            return f"{cls.__tablename__[:-1]}ies"
+        if cls.__name__[-1] == "y":
+            return f"{cls.__name__[:-1].lower()}ies"
         else:
             return f"{cls.__name__.lower()}s"

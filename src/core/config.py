@@ -1,7 +1,8 @@
-from pydantic import PostgresDsn, RedisDsn, field_validator
+from pydantic import PostgresDsn, field_validator, BaseModel
 from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
+from os import environ
 
 load_dotenv()
 
@@ -30,31 +31,28 @@ class DbSettings(BaseSettings):
         )
 
 
-class RedisSettings(BaseSettings):
-    host: str
-    port: int
-    url: str | None = None
+class RedisSettings(BaseModel):
+    host: str = environ.get("REDIS__HOST")
+    port: int = int(environ.get("REDIS__PORT"))
+    db: int = int(environ.get("REDIS__DB", 0))
 
-    @field_validator("url", mode="before")
-    def assemble_redis_connection(cls, v: str | None, values: ValidationInfo) -> str:  # NOQA
-        if isinstance(v, str):
-            return v
-        return str(
-            RedisDsn.build(
-                scheme="redis",
-                host=values.data.get("host"),
-                port=values.data.get("port"),
-            )
-        )
+
+class CacheNamespace(BaseModel):
+    user_inventory: str = "user_inventory"
+    analytics: str = "analytics"
+    idempotency_key: str = "idempotency_key"
+
+
+class CacheSettings(BaseModel):
+    prefix: str = "fastapi-cache"
+    namespace: CacheNamespace = CacheNamespace()
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(case_sensitive=False, env_nested_delimiter="__")
 
-    api_v1_prefix: str = '/api/v1'
-
     db: DbSettings
-    redis: RedisSettings
-
+    redis: RedisSettings = RedisSettings()
+    cache: CacheSettings = CacheSettings()
 
 settings = Settings()  # NOQA

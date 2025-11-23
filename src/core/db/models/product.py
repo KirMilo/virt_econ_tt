@@ -7,6 +7,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .transaction import Transaction
+    from .inventory import Inventory
 
 
 class Product(Base):
@@ -17,6 +18,10 @@ class Product(Base):
     is_active: Mapped[bool] = mapped_column(default=True)
 
     transactions: Mapped[list["Transaction"]] = relationship(
-        back_populates="transactions",
+        back_populates="product",
+        uselist=True,
+    )
+    inventories: Mapped[list["Inventory"]] = relationship(
+        back_populates="product",
         uselist=True,
     )

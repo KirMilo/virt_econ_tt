@@ -20,10 +20,10 @@ class User(Base):
     )
 
     inventories: Mapped[list["Inventory"]] = relationship(
-        back_populates="users",
+        back_populates="user",
         uselist=True,
     )  # one-to-many
     transactions: Mapped[list["Transaction"]] = relationship(
-        back_populates="users",
+        back_populates="user",
         uselist=True,
     )  # one-to-many
