@@ -1,9 +1,24 @@
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
 from fastapi import FastAPI
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from starlette.middleware.cors import CORSMiddleware
 
-# from api_v1.router import router as v1_router
+from core.caching.client import redis
+from core.config import settings
 
-app = FastAPI()
+from api import router_v1, healthcheck
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    FastAPICache.init(
+        RedisBackend(redis),
+        prefix=settings.cache.prefix,
+    )
+    yield
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -12,9 +27,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(v1_router, prefix="/api/v1")
+
+app.include_router(healthcheck)
+app.include_router(router_v1)
+
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True, workers=1)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, workers=1)
