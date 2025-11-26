@@ -9,6 +9,8 @@ from core.caching.client import redis
 from core.config import settings
 
 from api import router_v1, healthcheck
+from utils.clear_inventory_cache_task import scheduler
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -16,7 +18,9 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         RedisBackend(redis),
         prefix=settings.cache.prefix,
     )
+    scheduler.start()  # Task on clearing user inventory cache at 00:00 every day
     yield
+    scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(

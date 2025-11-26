@@ -1,6 +1,4 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends
 
 from api.v1.products.schemas import TransactionModel, InventoryModel
 from api.v1.products.service import handle_product_purchase, use_product
