@@ -27,3 +27,11 @@ class UsersBalanceNotEnough(HTTPException):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User not enough balance",
         )
+
+
+class RepeatPurchaseOfPermanentProduct(HTTPException):
+    def __init__(self, product_id: int):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User already purchased permanent product {product_id}",
+        )

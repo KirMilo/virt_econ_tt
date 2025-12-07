@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 
 from api.v1.products.schemas import TransactionModel, InventoryModel
-from api.v1.products.service import handle_product_purchase, use_product
+from api.v1.products.service import purchase_product, use_product
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
 @router.post("/{product_id}/purchase", response_model=TransactionModel)
 async def post_purchase_product(
-        transaction: TransactionModel = Depends(handle_product_purchase),
+        transaction: TransactionModel = Depends(purchase_product),
 ) -> TransactionModel:
     """
     Покупка товара.

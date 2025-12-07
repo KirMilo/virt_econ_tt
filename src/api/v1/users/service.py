@@ -1,6 +1,4 @@
-from functools import wraps
 from typing import Annotated, Sequence
-from itertools import groupby
 
 from fastapi import Depends, Path
 from sqlalchemy import select, RowMapping
@@ -12,6 +10,7 @@ from core.exceptions.exceptions import UserNotFound
 from .dependencies import get_user_inventory_from_cache, add_funds_payload
 from .schemas import AddFundsModel, AddFundsResponseModel
 from .utils.caching_transaction import CachingTransaction
+from .utils.decorators import group_by_quantity
 
 
 async def execute_transaction(
@@ -41,29 +40,6 @@ async def add_funds(
     response = AddFundsResponseModel(**payload.model_dump())
     await caching_transaction.set_value(response)
     return response
-
-
-def group_by_quantity(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        inventory = await func(*args, **kwargs)
-
-        consumable = []
-        permanent = []
-        for item in inventory:
-            if item["quantity"]:
-                consumable.append(item)
-            else:
-                permanent.append(item)
-
-        consumable = [
-            {"quantity": quantity, "products": list(products)}
-            for quantity, products in groupby(consumable, key=lambda q: q["quantity"])
-        ]
-
-        return {"consumable": consumable, "permanent": permanent}
-
-    return wrapper
 
 
 @group_by_quantity

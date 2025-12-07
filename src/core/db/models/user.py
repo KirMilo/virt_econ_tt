@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -27,3 +27,7 @@ class User(Base):
         back_populates="user",
         uselist=True,
     )  # one-to-many
+
+    __table_args__ = (
+        CheckConstraint("balance >= 0", name="balance_greater_than"),
+    )
