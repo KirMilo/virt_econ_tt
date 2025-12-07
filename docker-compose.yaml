@@ -18,7 +18,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-  #    restart: unless-stopped
 
   redis:
     image: redis:8.2-alpine
@@ -43,7 +42,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    restart: unless-stopped
 
   app:
     container_name: virtual-econ-backend
@@ -60,7 +58,6 @@ services:
       - .env.prod
     networks:
       - backend-network
-    restart: unless-stopped
 
   celery-beat:
     container_name: celery-beat
