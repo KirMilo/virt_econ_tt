@@ -9,7 +9,7 @@ from api.v1.users.service import add_funds, get_user_inventory
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("/{user_id}/add-funds")
+@router.post("/{user_id}/add-funds", response_model=AddFundsResponseModel)
 async def post_add_funds(response: AddFundsResponseModel = Depends(add_funds)):
     """Пополнение баланса"""
     return response

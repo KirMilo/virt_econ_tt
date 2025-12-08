@@ -10,7 +10,7 @@ WORKDIR /app
 
 COPY pyproject.toml .
 
-RUN uv sync
+RUN uv pip install .
 
 
 FROM python:3.13-slim
@@ -26,5 +26,3 @@ COPY ./src /app/src
 ENV PYTHONPATH=/app
 
 WORKDIR /app/src
-
-ENV PATH="/app/.venv/bin:${PATH}"
